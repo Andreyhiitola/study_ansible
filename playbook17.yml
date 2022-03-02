@@ -1,0 +1,25 @@
+
+
+---
+- name: My Super Playbook
+  hosts: all
+  become: yes
+  vars:
+    mytext: "Privet ot ADV-IT"  # по умолчанию эта переменная
+  
+  tasks:
+  - name: Ping test
+    ping:
+ 
+  - name: Greate folders
+    include: create_folders_17.yml
+    static: no
+  - name: Greate files
+    include: create_files_17.yml  mytext="Hello from Vancover"
+    static: no
+
+  
+  
+   
+  
+
