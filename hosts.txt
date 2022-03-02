@@ -1,0 +1,25 @@
+#Iventory files of hosts
+
+
+[staging_1]
+linux_1 ansible_host=192.168.1.138    owner=Petya
+linux_2 ansible_host=192.168.1.200    owner=Vasya 
+ 
+ 
+[staging_2_BD_1]
+linux_3 ansible_host=192.168.1.210    owner=Nikolay 
+
+
+[staging_3_BD_2]
+linux_4 ansible_host=192.168.1.240    owner=Valentin
+linux_5 ansible_host=192.168.1.220    owner=Oleg
+
+ 
+[staging_4_BUHG]
+linux_6 ansible_host=192.168.1.245    owner=Alex  
+
+
+[ALL_SERVERS_DB:children]
+staging_2_BD_1
+staging_4_BUHG 
+

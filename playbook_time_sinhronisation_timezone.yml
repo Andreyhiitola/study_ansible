@@ -1,0 +1,8 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+  - name: Change Timezone
+    command: timedatectl set-timezone Europe/Moscow
+  - name: Restart timedatctl
+    command: shutdown now
