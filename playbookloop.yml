@@ -1,0 +1,38 @@
+
+
+---
+- name : Loops Playbook
+  hosts: staging_1
+  become: yes
+
+   
+  tasks:
+  - name: Say Hello to ALL
+    debug: msg="Hello {{ item }}"
+    loop:                          #LOOP cikl
+       - "Vasya"
+       - "Peta"
+       - "Masha"
+       - "Olya"
+
+
+  - name: Loop Until example
+    shell: echo -n Z >> myfile.txt && cat myfile.txt
+    register: output
+    delay: 1
+    retries: 10
+    until: output.stdout.find("ZZZZ") == false  
+  
+
+  - name: Print Final output
+    debug: 
+       var: output.stdout   
+
+
+  - name: Install many packaged     # Можно инсталлировать множество программ
+
+    yum: name={{ item }} state=installed
+    with_items:
+            - python
+            - tree
+            - mysql        
