@@ -1,0 +1,31 @@
+
+---
+
+- name: Ansible lesson 19
+  hosts: all
+  any_errors_fatal: true                     # в случае любой ошибки прекращаетс работа playbook
+  become: yes
+
+
+
+
+  tasks:
+  - name: Task number1
+    yum: name=treeeeeee state=latest
+    ignore_errors: yes                        # данная команда игнорирует ошибку и позволяет далее выполнять tasks
+
+
+  - name: Task number2
+    shell: echo Hello world!
+    register: results                         # команда сохраняет результат 
+#   failed_when: "World in results.stdout"     
+    failed_when: results .rc == 0             # возврат результата по коду
+  
+  - debug:
+      var: results                            # команда debug выведет результат на экран  
+
+  - name: Task number3
+    shell: echo Privet Mir!!!!
+
+
+ 

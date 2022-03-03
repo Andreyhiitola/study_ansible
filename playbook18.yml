@@ -1,0 +1,54 @@
+
+
+---
+- name: My Super Playbook  delegate_to
+  hosts: all
+  become: yes
+  vars:
+    mytext: "Privet ot ADV-IT"                   # по умолчанию эта переменная
+  
+  tasks:
+  - name: Ping test
+    ping:
+
+  - name: Unregister Server from Load balancer
+    shell: echo This server {{ inventory_hostname }}  was deregistered from our Load Balancer,  node name is {{ ansible_nodename }} >> /root/log.txt
+    delegate_to: 127.0.0.1 
+
+
+  - name: Update my Database
+    shell: echo UPDATING Database......
+    run_once: true
+
+
+  - name: Greate file1
+    copy:
+      dest: /root/file1.txt
+      content: |
+         This is FileN1
+         On ENGLISH Hello world
+         On RUSSIAN {{ mytext }}
+    delegate_to: linux_3                         # делегируется размещение файлов ( или работа ) только с linux_3                
+   
+  - name: Greate file2
+    copy:
+      dest: /root/file2.txt
+      content: |
+         This is FileN2
+         On ENGLISH Hello world
+         On RUSSIAN {{ mytext }}
+#   delegate_to: linux_4
+  
+  
+  - name: Reboot my server                       # перезапуск серверов            
+    shell: sleep 3 && reboot now
+    async: 1
+    poll: 0 
+  
+  - name: Wait till my server will come up online
+    wait_for:
+        host: "{{ inventory_hostname }}"
+        state: started
+        delay: 5                                  # секунды
+        timeout: 40                               # максимальное время ожидания 
+    delegate_to: 127.0.0.1
