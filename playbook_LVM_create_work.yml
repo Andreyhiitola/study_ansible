@@ -1,0 +1,11 @@
+
+
+---
+- name : Create  LVM  Playbook
+  hosts: staging_1
+  become: yes
+
+
+  roles:
+     - create_LVM_Disk 
+#   - { role: create_LVM_Disk, when: ansible_system == 'Linux' } -  в такой конфигурации запустит roles если операционная система Linux           
