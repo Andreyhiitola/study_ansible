@@ -1,0 +1,111 @@
+
+
+---
+- name : Create  LVM  Playbook
+  hosts: localhost
+  become: yes
+
+
+   
+  tasks:
+  - name: Say Hello to ALL
+    debug: msg="Hello {{ item }}"
+    loop:                          
+      - "Vasya"
+      - "Peta"
+      - "Masha"
+      - "Olya"
+
+   
+ #- name: upgrade all packages
+ #  yum: name=* state=latest    
+
+
+  - name: Install  install LVM2 and other
+    yum:
+      name: "{{ package }}"
+    vars:
+      package:
+      - lvm2
+      - htop
+
+  - name: Create a new ext4 primary partition
+    community.general.parted:
+        device: /dev/sdb
+        number: 1
+        state: present
+        fs_type: ext4
+
+
+  - name: Create a new ext4 primary partition
+    community.general.parted:
+       device: /dev/sdc
+       number: 1
+       state: present
+       fs_type: ext4
+
+
+  - name: Create a new ext4 primary partition
+    community.general.parted:
+       device: /dev/sdd
+       number: 1
+       state: present
+       fs_type: ext4
+
+
+     
+
+  - name: Create or resize a volume group on top of /dev/sdb  /dev/sdc /dev/sdd
+    lvg:
+       vg: vg1
+       pvs: /dev/sdb1,/dev/sdc1,/dev/sdd1
+
+  - name: Create a logical volume of 3060m.
+    lvol:
+       vg: vg1
+       lv: lv1
+       size: 6120m
+
+  - name: Create directory data if does not exist
+    file:
+        path: /mnt/data
+        state: directory
+        mode: '0755'
+
+  - name: format the xfs filesystem
+    filesystem:
+        fstype: ext4
+        dev: /dev/vg1/lv1
+
+  - name: mount the lv on /data
+    mount:
+        path: /mnt/data
+        src: /dev/vg1/lv1
+        fstype: ext4
+        state: mounted
+ 
+  - name: Print Final output
+    debug: 
+       var: output.stdout   
+
+#  - name: display multiple file contents
+#    debug: var=item
+#      with_file:
+#      - "/path/to/foo.txt"
+#       - "bar.txt"  # will be looked in files/ dir relative to play or in role
+#       - "/path/to/biz.txt"
+
+
+
+
+
+
+          
+
+#  - name: Install many packaged     # Можно инсталлировать множество программ
+#
+#    yum: name={{ item }} state=installed
+#    with_items:
+#            - python
+#            - tree
+#            - mysql        
