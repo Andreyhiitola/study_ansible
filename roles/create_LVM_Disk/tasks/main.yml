@@ -1,14 +1,5 @@
-
-
 ---
-- name : Create  LVM  Playbook
-  hosts: staging_1
-  become: yes
 
-
-   
-  tasks:
-  
 
   - name: Set authorized key took from file
     authorized_key:
@@ -16,37 +7,32 @@
        state: present
        key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}" 
 
-
-
-
-
   - name: Say Hello to ALL
     debug: msg="Hello {{ item }}"
-    loop:                          
-      - "Vasya"
-      - "Peta"
-      - "Masha"
-      - "Olya"
+    loop: "{{ list_name }}"                      
+#      - "Vasya"
+#      - "Peta"
+#      - "Masha"
 
-   
-  - name: upgrade all packages
-    yum: name=* state=latest    
+
+  - name: Collect only facts about hardware
+    setup:
+      gather_subset:
+      - hardware
+
+  - name: Output disks
+    debug:
+      var: hostvars[inventory_hostname].ansible_devices.keys() | map('regex_search', 'sd.*') | select('string') | list
 
 
   - name: Install  install LVM2 and other
     yum:
       name: "{{ package }}"
-    vars:
-      package:
-      - lvm2
-      - mc
-      - tree
-      - tmux
-      state: present 
+
 
   - name: Create a new ext4 primary partition
     community.general.parted:
-        device: /dev/sdb
+        device: /dev/sdb                          # /dev/{{item.disk1}}     #/dev/sdb
         number: 1
         state: present
         fs_type: ext4
@@ -54,7 +40,7 @@
 
   - name: Create a new ext4 primary partition
     community.general.parted:
-       device: /dev/sdc
+       device: /dev/sdc                           #/dev/{{item.disk2}}       #/dev/sdc
        number: 1
        state: present
        fs_type: ext4
@@ -62,7 +48,7 @@
 
   - name: Create a new ext4 primary partition
     community.general.parted:
-       device: /dev/sdd
+       device: /dev//sdd                          # /dev/{{item.disk3}}      #/dev/sdd
        number: 1
        state: present
        fs_type: ext4
@@ -75,11 +61,15 @@
        vg: vg1
        pvs: /dev/sdb1,/dev/sdc1,/dev/sdd1
 
-  - name: Create a logical volume of 3060m.
+  - name: Create a logical volume of 100%free     
     lvol:
        vg: vg1
        lv: lv1
-       size: 6120m
+       size: 100%PVS
+       resizefs: true    
+
+
+
 
   - name: Create directory data if does not exist
     file:
@@ -103,12 +93,12 @@
     debug: 
        var: output.stdout   
 
-#  - name: display multiple file contents
-#    debug: var=item
-#      with_file:
-#      - "/path/to/foo.txt"
-#       - "bar.txt"  # will be looked in files/ dir relative to play or in role
-#       - "/path/to/biz.txt"
+
+
+
+
+
+
 
 
 
@@ -117,10 +107,9 @@
 
           
 
-#  - name: Install many packaged     # Можно инсталлировать множество программ
-#
-#    yum: name={{ item }} state=installed
-#    with_items:
-#            - python
-#            - tree
-#            - mysql        
+
+
+
+
+
+    

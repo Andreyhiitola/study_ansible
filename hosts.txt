@@ -3,11 +3,18 @@
 
 [staging_1]
 linux_1 ansible_host=192.168.1.138    owner=Petya
-linux_2 ansible_host=192.168.1.200    owner=Vasya 
+linux_2 ansible_host=192.168.1.210    owner=Vasya
+linux_7 ansible_host=192.168.1.54
+linux_3 ansible_host=192.168.1.200    owner=Nikolay
+linux_5 ansible_host=192.168.1.220    owner=Oleg
+
+
+
  
  
 [staging_2_BD_1]
-linux_3 ansible_host=192.168.1.210    owner=Nikolay 
+linux_3 ansible_host=192.168.1.200    owner=Nikolay 
+linux_2 ansible_host=192.168.1.210    owner=Vasya
 
 
 [staging_3_BD_2]
