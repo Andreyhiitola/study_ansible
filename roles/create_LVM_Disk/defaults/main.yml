@@ -1,0 +1,26 @@
+---
+# defaults file for create_LVM_Disk
+  package:
+  - lvm2
+  - mc
+  - tree
+  - tmux
+  state: present
+
+  list_name:
+  - "Vasy"
+  - "Pety"
+  - "Masha"
+
+#  drive1: "/dev/sdb"
+#  drive2: "/dev/sdc"
+#  drive3: "/dev/sdd"
+    
+#  fs_type: "ext4"
+
+#  item.disk1:
+#   - "sdb"
+#  item.disk2:
+#  - "sdc"
+#  item.disk3:
+#  - "sdd"   
