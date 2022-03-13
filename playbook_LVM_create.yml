@@ -2,12 +2,24 @@
 
 ---
 - name : Create  LVM  Playbook
-  hosts: localhost
+  hosts: staging_1
   become: yes
 
 
    
   tasks:
+  
+
+  - name: Set authorized key took from file
+    authorized_key:
+       user: root
+       state: present
+       key: "{{ lookup('file', '/root/.ssh/id_rsa.pub') }}" 
+
+
+
+
+
   - name: Say Hello to ALL
     debug: msg="Hello {{ item }}"
     loop:                          
@@ -17,8 +29,8 @@
       - "Olya"
 
    
- #- name: upgrade all packages
- #  yum: name=* state=latest    
+  - name: upgrade all packages
+    yum: name=* state=latest    
 
 
   - name: Install  install LVM2 and other
@@ -27,7 +39,10 @@
     vars:
       package:
       - lvm2
-      - htop
+      - mc
+      - tree
+      - tmux
+      state: present 
 
   - name: Create a new ext4 primary partition
     community.general.parted:
